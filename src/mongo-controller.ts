@@ -20,7 +20,7 @@ export default class MongoController {
    */
   private _connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected
 
-  constructor(private readonly client: MongoClient, private readonly dbName: string) {}
+  constructor(public readonly mongoClient: MongoClient, private readonly dbName: string) {}
 
   /**
    * Gets the current connection status.
@@ -33,7 +33,7 @@ export default class MongoController {
    * Gets the name of the configured database.
    */
   public get databaseName(): string | null {
-    return this.client.db.name || null
+    return this.mongoClient.db.name || null
   }
 
   /**
@@ -72,7 +72,7 @@ export default class MongoController {
       return true
     }
 
-    const result = await this.client.close().catch(() => null)
+    const result = await this.mongoClient.close().catch(() => null)
     if (result === null) {
       return false
     }
@@ -89,10 +89,10 @@ export default class MongoController {
   public async connect(): Promise<this> {
     if (this._connectionStatus === ConnectionStatus.Connected) return this
 
-    const result = await this.client.connect().catch(() => null)
+    const result = await this.mongoClient.connect().catch(() => null)
     if (!result) throw new Error("Cannot connect to database")
 
-    this._database = this.client.db(this.dbName)
+    this._database = this.mongoClient.db(this.dbName)
     this._connectionStatus = ConnectionStatus.Connected
 
     return this
