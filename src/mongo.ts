@@ -14,5 +14,13 @@ export const mongo = {
         return mongo.createClient(connectUri, databaseName, options)
       }
     }
+  },
+
+  withClient(mongoClient: MongoClient, databaseName: string) {
+    return new MongoController(mongoClient, databaseName)
+  },
+
+  createMongoClient(connectUri: string, options?: MongoClientOptions) {
+    return new MongoClient(connectUri, options)
   }
 }
