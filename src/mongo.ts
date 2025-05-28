@@ -9,9 +9,11 @@ export const mongo = {
   },
 
   createInstance(connectUri: string, options?: MongoClientOptions) {
+    const client = new MongoClient(connectUri, options)
+
     return {
       createClient(databaseName: string) {
-        return mongo.createClient(connectUri, databaseName, options)
+        return new MongoController(client, databaseName)
       }
     }
   },
